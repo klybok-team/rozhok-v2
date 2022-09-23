@@ -34,7 +34,6 @@ if(!fs.existsSync('./temp')) {
 };
 
 const { Client, Collection } = require('eris');
-const { red } = require('cli-color');
 
 const client = new Client(config.token, {
     allowedMentions: {
@@ -144,7 +143,7 @@ if(config.ourFile === true) {
 });
 client.once('ready', () => {
     if(fs.readdirSync('../img').length >= config.limitimg) {
-        console.log(red(`Место в ../img закончилось. ${fs.readdirSync('../img').length} из ${config.limitimg}`));
+        console.log(`\x1b[31mМесто в ../img закончилось. ${fs.readdirSync('../img').length} из ${config.limitimg}\x1b[0m`);
     };
     console.log(`Готов,\nИмя: ${client.user.username}\nДОП. ИНФ.\nСсылка на аватарку: ${client.user.avatarURL}\nАйди клиента: ${client.user.id}\nКоличество серверов: ${client.guilds.size}\nРандомное число для откладки: ${random(0, 100)}`);
     if(!config.botonlineStatus) {
@@ -167,7 +166,7 @@ process.on('SIGINT', () => {
 });
 
 process.on('exit', () => {
-    console.log(red('\nПроцесс был закрыт.'));
+    console.log('\x1b[31mПроцесс был закрыт.\n\x1b[0m');
 	console.log('\nПроизвожу очистку..');
     if(config.tempClear) {
         console.log('Очищаю папку с временными файлами..');
