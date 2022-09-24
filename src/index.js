@@ -48,6 +48,7 @@ const random = require('./functions/random.js');
 const write = require('./functions/write.js');
 const downloadFile = require('./functions/downloadFile.js');
 const demotivatorImage = require('./functions/demotivatorImage.js');
+const prikol = require('./functions/prikol.js');
 
 for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.js'))) {
 	const command = require(`./cmd/${nameOfFile}`);
@@ -123,11 +124,24 @@ if(config.ourFile === true) {
     if (config.imgSaveAndUse) {
         if (random(0, 11) < 4) {
             const file = imgdir[random(0, imgdir.length)];
-            if(random(0, 11) < config.demotivatorChance) {
+
+            let randomNumber = random(0, 6)
+            if(randomNumber === 1) {
                 const image = await demotivatorImage(fs.readFileSync(`../img/${file}`), lines[random(0, lines.length)], lines[random(0, lines.length)]);
 
-                return client.createMessage(m.channel.id, lines[random(0, lines.length)], [{ file: image, name: file }]);
+                return client.createMessage(m.channel.id, {}, [{ file: image, name: file }]);
             };
+            if(randomNumber === 2) {
+                const image = await prikol(lines[random(0, lines.length)], 'textOnImg', fs.readFileSync(`../img/${file}`));
+
+                return client.createMessage(m.channel.id, {}, [{ file: image, name: file }]);
+            }
+            if(randomNumber === 3) {
+                const image = await prikol(lines[random(0, lines.length)], 'jack_fresco');
+
+                return client.createMessage(m.channel.id, {}, [{ file: image, name: file }]);
+            }
+
             try{
                 let img = fs.readFileSync(`../img/${file}`);
                 return client.createMessage(m.channel.id, lines[random(0, lines.length)], [{ file: img, name: file }]);
