@@ -9,9 +9,5 @@ module.exports = async(url, path) => {
         responseType: 'stream'
     });
     
-    if(res.data.headers['content-type'] === 'image/jpg') {
-        res.data.headers['content-type'] = 'image/jpeg'
-    };
-
     return await res.data.pipe(fs.createWriteStream(path));
 };

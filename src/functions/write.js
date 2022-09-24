@@ -1,9 +1,6 @@
 const fs = require('fs');
 module.exports = async(args, boolean, guildID) => {
-    let path;
-    if(boolean === true) {
-        path = `../data/data.txt`
-    }
+    let path = `../data/data.txt`;
     if(boolean === false) {
         path = `../data/${guildID}_data.txt`
     }
