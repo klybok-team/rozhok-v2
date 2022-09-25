@@ -24,7 +24,7 @@ module.exports = async(text, whatYouNeed, img) => {
     return canvas.toBuffer();
     };
     if(whatYouNeed === 'jack_fresco') {
-        const canvas_img = await loadImage(require('fs').readFileSync('../assets/jak_fresco.png'));
+        const canvas_img = await loadImage(require('fs').readFileSync('../assets/jack_fresco.png'));
 
         const canvas = createCanvas(canvas_img.width, canvas_img.height);
         const ctx = canvas.getContext('2d');
