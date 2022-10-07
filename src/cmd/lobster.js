@@ -4,8 +4,8 @@ const { lobsterReplies, waitTime, other } = require('../../config.js')
 const downloadFile = require('../functions/downloadFile.js')
 
 module.exports = {
-	name: 'demotivator',
-	aliases: ['d', 'dem'],
+	name: 'lobster',
+	aliases: ['l'],
 	async execute(client, m, args) {
 		if(!args) return client.createMessage(m.channel.id, lobsterReplies.ErrorArgs.noText);
 
