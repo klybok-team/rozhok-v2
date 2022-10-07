@@ -57,7 +57,7 @@ for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.
 client.on('messageCreate', async(m) => {
     if(m.author.bot) return;
     
-    if (m.content.startsWith(config.commandsPrefix)) {
+    if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
         const nameOfCommand = args.shift().toLowerCase();
     
@@ -141,7 +141,6 @@ if(config.ourFile === true) {
 
                 return client.createMessage(m.channel.id, {}, [{ file: image, name: file }]);
             }
-
             try{
                 let img = fs.readFileSync(`../img/${file}`);
                 return client.createMessage(m.channel.id, lines[random(0, lines.length)], [{ file: img, name: file }]);
