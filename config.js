@@ -41,19 +41,25 @@ module.exports = {
     // Команды
     commandsEnable: true, // Включены ли команды
     commandsPrefix: 'roz.', // Префикс команд
-    commandDemotivator: true, // Включена ли команда "demotivator" (dem, demotivator, d)
-
+    
     // Буквы
 
     demotivatorReplies: {
-        fileExNotNed: 'Неподдерживаемое разрешение..',
         ErrorArgs: {
             noText: 'слыш где буквы?',
             noImg: 'слыш где картинка?',
         },
         Errorlength: `Воу, палехше\nТекст: {} из 35\nПод-текст {1} из 35`,
     },
+    lobsterReplies: {
+        ErrorArgs: {
+            noText: 'where буквы?',
+            noImg: 'где image?'
+        },
+        Errorlenght: `ale куда лезем ты че нарушаешь  > 99 символов куда  ?? `
+    },
     other: {
-        error: 'Упс.. ошибочка'
-    }
+        fileExNotNed: 'Неподдерживаемое разрешение..',
+        error: 'Упс.. ошибочка',
+    },
 }
