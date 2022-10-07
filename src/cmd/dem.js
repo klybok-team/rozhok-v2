@@ -1,4 +1,4 @@
-const { demotivatorReplies, tempClearBeforeExit, waitTime } = require('../../config.js')
+const { demotivatorReplies, tempClearBeforeExit, waitTime, other } = require('../../config.js')
 const downloadFile = require('../functions/downloadFile.js')
 const demotivatorImage = require('../functions/demotivatorImage.js');
 const fs = require('fs')
@@ -40,6 +40,6 @@ module.exports = {
 		if(tempClearBeforeExit === true) return fs.rmSync(path);
 		return;
 		}
-		return client.createMessage(m.channel.id, demotivatorReplies.fileExNotNed);
+		return client.createMessage(m.channel.id, other.fileExNotNed);
 	},
 };
