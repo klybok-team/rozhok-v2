@@ -13,7 +13,7 @@ module.exports = async(text, whatYouNeed, img) => {
 
     ctx.drawImage(canvas_img, 0, 0);
 
-    random(0, 4) <= 2 ? ctx.fillStyle = '#fff' : ctx.fillStyle = '#000000';
+    ctx.fillStyle = '#fff'
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = '32px Lobster';

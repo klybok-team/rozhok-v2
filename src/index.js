@@ -28,11 +28,6 @@ if(!config.token) return console.log('kto token bota ykral?');
 
 const fs = require('fs');
 
-if(!fs.existsSync('./temp')) { 
-    console.log('Создание папки с временными файлами...')
-    fs.mkdirSync('./temp');
-};
-
 const { Client, Collection } = require('eris');
 
 const client = new Client(config.token, {
@@ -106,7 +101,9 @@ if(config.ourFile === true) {
                 if(config.imageFilter === 'low' && m.channel.guild.explicitContentFilter === 2) saveThisBoolean = true;
                 if(config.imageFilter === 'none') saveThisBoolean = true;
                 if(saveThisBoolean === true && !m.attachments[config.limitToImgOnce]) {
-                    await downloadFile(`${attachment.url}`, `../img/${m.id}_${attachment.filename.replace('.jpg', '.jpeg')}`);
+                    await downloadFile(`${attachment.url}`).then(async source => {   
+                        fs.createWriteStream(`../img/${m.id}_${attachment.filename.replace('.jpg', '.jpeg')}`).write(source)
+                })
                     console.log(`Скачан файл: ${attachment.filename}`);
                 };
             };
@@ -172,19 +169,6 @@ client.once('ready', () => {
 
 client.on('error', (e) => {
     console.error(e);
-});
-
-process.on('SIGINT', () => {
-	process.exit();
-});
-
-process.on('exit', () => {
-    console.log('\x1b[31mПроцесс был закрыт.\n\x1b[0m');
-	console.log('\nПроизвожу очистку..');
-    if(config.tempClear) {
-        console.log('Очищаю папку с временными файлами..');
-        require('fs').rmdirSync('./temp', { recursive: true, force: true });
-    };
 });
 
 client.connect();
