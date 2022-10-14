@@ -1,32 +1,12 @@
-/*
-MIT License
+const fs = require('fs');
 
-Copyright (c) 2022 Cliv Shape
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+if(fs.existsSync('../config_example.js') && !fs.existsSync('../config.js')) {
+    fs.renameSync('../config_example.js', 'config.js').then(() => console.log('config_example.js был переименован в config.js'));
+};
 
 let config = require('../config.js');
 
 if(!config.token) return console.log('kto token bota ykral?');
-
-const fs = require('fs');
 
 const { Client, Collection } = require('eris');
 
@@ -48,7 +28,8 @@ const prikol = require('./functions/prikol.js');
 for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.js'))) {
 	const command = require(`./cmd/${nameOfFile}`);
 	client.cmd.set(command.name, command);
-}
+};
+
 client.on('messageCreate', async(m) => {
     if(m.author.bot) return;
     
@@ -151,6 +132,7 @@ if(config.ourFile === true) {
     };
     return client.createMessage(m.channel.id, lines[random(0, lines.length)] + ' ' + lines[random(0, lines.length)]);
 });
+
 client.once('ready', () => {
     if(fs.readdirSync('../img').length >= config.limitimg) {
         console.log(`\x1b[31mМесто в ../img закончилось. ${fs.readdirSync('../img').length} из ${config.limitimg}\x1b[0m`);
