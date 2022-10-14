@@ -102,8 +102,8 @@ if(config.ourFile === true) {
                 if(config.imageFilter === 'none') saveThisBoolean = true;
                 if(saveThisBoolean === true && !m.attachments[config.limitToImgOnce]) {
                     await downloadFile(`${attachment.url}`).then(async source => {   
-                        fs.createWriteStream(`../img/${m.id}_${attachment.filename.replace('.jpg', '.jpeg')}`).write(source)
-                })
+                        fs.createWriteStream(`../img/${m.id}_${attachment.filename.replace('.jpg', '.jpeg')}`).write(source);
+                });
                     console.log(`Скачан файл: ${attachment.filename}`);
                 };
             };

@@ -1,7 +1,7 @@
 const { createCanvas, loadImage, registerFont } = require('canvas');
 const random = require('../functions/random.js');
 
-registerFont('../assets/Lobster.ttf', { family: 'Lobster'});
+registerFont('../assets/Lobster.ttf', { family: 'Lobster' });
 
 module.exports = async(text, whatYouNeed, img) => {
     if(whatYouNeed === 'textOnImg') {
