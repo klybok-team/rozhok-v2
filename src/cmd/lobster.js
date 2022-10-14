@@ -1,4 +1,3 @@
-const fs = require('fs')
 const prikol = require('../functions/prikol.js');
 const { lobsterReplies, other } = require('../../config.js')
 const downloadFile = require('../functions/downloadFile.js')

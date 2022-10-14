@@ -1,7 +1,6 @@
 const { demotivatorReplies, other } = require('../../config.js')
 const downloadFile = require('../functions/downloadFile.js')
 const demotivatorImage = require('../functions/demotivatorImage.js');
-const fs = require('fs')
 
 module.exports = {
 	name: 'demotivator',

@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const axios = require('axios');
 
 module.exports = async(url, path) => {
