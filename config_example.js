@@ -7,8 +7,8 @@ module.exports = {
     saveAnyData: true, // Сохранять ли ВСЕ данные
     imgSaveAndUse: true, // Сохранять ли & использовать изображения
 
-    bottextStatus: "за чатиком..", // Текст, который будет отображен в статусе бота
-    botonlineStatus: "idle", // Устанавливает статус бота: "online", "idle", "dnd", "invisible"
+    bottextStatus: "", // Текст, который будет отображен в статусе бота
+    botonlineStatus: "", // Устанавливает статус бота: "online", "idle", "dnd", "invisible"
     typeofStatus: 3, // Тип статуса: 0 "Играет", 1 "Стримит" (только твич), 2 "Слушает", 3 "Смотрит", 5 "Соревнуется в"
 
     idChanneltoSaveAndWrite: [""], // ID канала/ов, куда будут писаться сообщения (и читаться оттуда), например ['1', '2']
