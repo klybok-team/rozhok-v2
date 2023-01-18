@@ -79,7 +79,6 @@ if(config.ourFile === true) {
             for (let attachment of m.attachments) {
                 if(attachment.filename.endsWith('.jpg') || attachment.filename.endsWith('.jpeg') || attachment.filename.endsWith('.png')) {
                 let saveThisBoolean = false;
-                if(config.imageFilter === 'low' && m.channel.guild.explicitContentFilter === 2) saveThisBoolean = true;
                 if(config.imageFilter === 'none') saveThisBoolean = true;
                 if(saveThisBoolean === true && !m.attachments[config.limitToImgOnce]) {
                     await downloadFile(`${attachment.url}`).then(async source => {   
