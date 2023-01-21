@@ -22,8 +22,6 @@ client.cmd = new Collection();
 const random = require('./functions/random.js');
 const write = require('./functions/write.js');
 const downloadFile = require('./functions/downloadFile.js');
-const demotivatorImage = require('./functions/demotivatorImage.js');
-const prikol = require('./functions/prikol.js');
 
 for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.js'))) {
 	const command = require(`./cmd/${nameOfFile}`);
