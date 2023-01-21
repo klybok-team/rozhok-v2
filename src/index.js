@@ -110,9 +110,9 @@ if(config.ourFile === true) {
         };
     };
     if(random(0, 3) === 1) {
-        return client.createMessage(m.channel.id, lines[random(0, lines.length)]);
+        return client.createMessage(m.channel.id, lines[random(0, lines.length)] + ' ' + lines[random(0, lines.length)]);
     };
-    return client.createMessage(m.channel.id, lines[random(0, lines.length)] + ' ' + lines[random(0, lines.length)]);
+    return client.createMessage(m.channel.id, lines[random(0, lines.length)]);
 });
 
 client.once('ready', () => {
