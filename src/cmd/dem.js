@@ -4,6 +4,7 @@ const demotivatorImage = require('../functions/demotivatorImage.js');
 module.exports = {
 	name: 'demotivator',
 	aliases: ['d', 'dem'],
+	desc: 'Создать смешной демотиватор',
 	async execute(client, m, args) {
 
 		args = args.toString().split(' | ');
