@@ -101,6 +101,7 @@ if(config.ourFile === true) {
             const file = imgdir[random(0, imgdir.length)];
             try{
                 let img = fs.readFileSync(`../img/${file}`);
+                if(random(0, 3) === 1) return client.createMessage(m.channel.id, {}, [{ file: img, name: file }]);
                 return client.createMessage(m.channel.id, lines[random(0, lines.length)], [{ file: img, name: file }]);
             } catch (e) {
                 console.error(e);
