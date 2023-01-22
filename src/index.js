@@ -30,6 +30,7 @@ for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.
 
 client.on('messageCreate', async(m) => {
     if(m.author.bot) return;
+    if(!m.guildID) return;
     
     if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
