@@ -32,4 +32,5 @@ module.exports = {
     // Пользовательские команды.
     commandsEnable: true, // Включены ли команды?
     commandsPrefix: 'roz.', // Префикс команд.
+    commandsAccess: [''], // Тот, кто имеет доступ к DEV-коммандам
 };

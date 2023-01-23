@@ -5,9 +5,30 @@ module.exports = {
 	name: 'help',
 	aliases: ['h'],
     desc: 'Узнать список команд',
-	async execute(client, m, args) {
-        if(!args) return client.createMessage(m.channel.id, `Вот список доступных вам команд: ${client.cmd.map(obj => obj.name).join(', ')}`)
+	async execute(client, m, args, areYouDev) {
 
+        let normalCommands = []
+        let devCommands = []
+
+        let map = client.cmd.map(m => m)
+
+        for(let obj of map) {
+                if(obj.devAccess) {
+                    if(areYouDev === true) {
+                        devCommands.push(obj.name)
+                    }
+                }
+                if(!obj.devAccess) {
+                    normalCommands.push(obj.name)
+                }
+        }
+        
+        if(!args) {
+            let msg = `Вот список доступных вам команд: ${normalCommands.join(', ')}`
+            if(devCommands.length > 0) msg = msg + `\n\nПОЛУЧЕН ДОСТУП К КАРТОЧКЕ DEV... СПИСОК ДОСТУПНЫХ ВАМ КОМАНД: ${devCommands.join(', ')}`
+            if(!args) return client.createMessage(m.channel.id, msg)
+    
+        };
         
         args = args.split(' ')
 

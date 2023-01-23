@@ -29,19 +29,25 @@ for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.
 };
 
 client.on('messageCreate', async(m) => {
+
     if(m.author.bot) return;
     if(!m.guildID) return;
-    
+
     if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
-        const nameOfCommand = args.shift().toLowerCase();
+        const nameOfCommand = args.shift();
     
         const command = client.cmd.get(nameOfCommand) || client.cmd.find(cmd => cmd.aliases && cmd.aliases.includes(nameOfCommand));
     
         if(!command) return;
 
+        let areYouDev = false;
+        for(let userID of config.commandsAccess) {
+            if(userID === m.author.id) areYouDev = true
+        }
         try {
-            await command.execute(client, m, args.join(' '));
+            if(command.devAccess && areYouDev === false) return client.createMessage(m.channel.id, 'У вас нет прав на использование этой команды.')
+            await command.execute(client, m, args.join(' '), areYouDev);
         } catch(e) {
             console.log(e);
             client.createMessage(m.channel.id, config.erorr);
@@ -116,6 +122,7 @@ if(config.ourFile === true) {
 });
 
 client.once('ready', () => {
+    if(!config.commandsAccess) console.log('Не назначены те, кто имеют доступ к DEV-командам');
     if(fs.readdirSync('../img').length >= config.limitimg) {
         console.log(`\x1b[31mМесто в ../img закончилось. ${fs.readdirSync('../img').length} из ${config.limitimg}\x1b[0m`);
     };
