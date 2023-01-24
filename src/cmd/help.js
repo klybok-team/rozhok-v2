@@ -24,7 +24,7 @@ module.exports = {
         }
         
         if(!args) {
-            let msg = `Вот список доступных вам команд: ${normalCommands.join(', ')}`
+            let msg = `Привет! Я рожок.\nВот список доступных вам команд: ${normalCommands.join(', ')}`
             if(devCommands.length > 0) msg = msg + `\n\nПОЛУЧЕН ДОСТУП К КАРТОЧКЕ DEV... СПИСОК ДОСТУПНЫХ ВАМ КОМАНД: ${devCommands.join(', ')}`
             if(!args) return client.createMessage(m.channel.id, msg)
     
