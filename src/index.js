@@ -31,7 +31,6 @@ for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.
 client.on('messageCreate', async(m) => {
 
     if(m.author.bot) return;
-    if(!m.guildID) return;
 
     if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
@@ -53,8 +52,12 @@ client.on('messageCreate', async(m) => {
             client.createMessage(m.channel.id, config.erorr);
         };
         return;
-}
+    };
+    
+    if(!m.guildID) return;
+    
     let data;
+
     if(config.ourFile === false) { 
     if(!fs.existsSync(`../data/${m.guildID}_data.txt`)) {
         console.log('Обнаружена новая гильдия, создаю файл с текстом для неё..');
