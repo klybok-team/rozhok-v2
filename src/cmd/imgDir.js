@@ -28,7 +28,6 @@ module.exports = {
         if(args[1] === 'del') {
             if(args[2] === '-yes' || args[2] === '-y') {
                 if(fs.existsSync(`../img/${args[0]}`)) {
-                    fs.rm
                     fs.rmSync(`../img/${args[0]}`)
                     return client.createMessage(m.channel.id, 'Если вы видите это сообщение, значит бот не крашнулся и скорее всего все прошло успешно.');
                 }
