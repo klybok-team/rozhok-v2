@@ -26,7 +26,7 @@ module.exports = {
 	
 		if(!attachment) return client.createMessage(m.channel.id, 'Отсутствует изображение.');
 		
-		if(attachment.filename.endsWith('.jpg') || attachment.filename.endsWith('.jpeg') || attachment.filename.endsWith('.png')) {
+		if(attachment.filename.toLowerCase().endsWith('.jpg') || attachment.filename.toLowerCase().endsWith('.jpeg') || attachment.filename.toLowerCase().endsWith('.png')) {
             return await downloadFile(`${attachment.url}`).then(async source => {
 
 			const canvas_img = await loadImage(source);

@@ -25,7 +25,7 @@ module.exports = {
 	
 		if(!attachment) return client.createMessage(m.channel.id, 'Отсутствует изображение.');
 
-		if(attachment.filename.endsWith('.jpg') || attachment.filename.endsWith('.jpeg') || attachment.filename.endsWith('.png')) {
+		if(attachment.filename.toLowerCase().endsWith('.jpg') || attachment.filename.toLowerCase().endsWith('.jpeg') || attachment.filename.toLowerCase().endsWith('.png')) {
 			if(args[0].length > 35 || args[1]?.length > 35) return client.createMessage(m.channel.id, `Упс.. много букв.\nТекст: ${args[0].length} из 35\nПод-текст ${args[1]?.length ? args[1].length : '0'} из 35`);
 			return await downloadFile(`${attachment.url}`).then(async source => {
 			let image = await demotivatorImage(source, args[0], args[1]);
