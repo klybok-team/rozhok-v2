@@ -22,7 +22,6 @@ client.cmd = new Collection();
 const random = require('./functions/random.js');
 const write = require('./functions/write.js');
 const downloadFile = require('./functions/downloadFile.js');
-const { msgFilter } = require('../config_example.js');
 
 for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.js'))) {
 	const command = require(`./cmd/${nameOfFile}`);
@@ -87,7 +86,7 @@ if(config.ourFile === true) {
         if(m.content.match("(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+?(?=\s)")) {
             console.log("Обнаружено сообщение с дискорд-ссылкой..")
 
-            if(msgFilter == "links") return;
+            if(config.msgFilter == "links") return;
         }
 
 
