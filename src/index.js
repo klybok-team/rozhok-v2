@@ -22,6 +22,7 @@ client.cmd = new Collection();
 const random = require('./functions/random.js');
 const write = require('./functions/write.js');
 const downloadFile = require('./functions/downloadFile.js');
+const { msgFilter } = require('../config_example.js');
 
 for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.js'))) {
 	const command = require(`./cmd/${nameOfFile}`);
@@ -29,10 +30,10 @@ for (const nameOfFile of fs.readdirSync('./cmd').filter(file => file.endsWith('.
 };
 
 client.on('messageCreate', async(m) => {
-
     if(m.author.bot) return;
 
     if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
+
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
         const nameOfCommand = args.shift();
     
@@ -82,6 +83,14 @@ if(config.ourFile === true) {
 
     if(m.content.length < config.maxLenghtToWrite && config.saveAnyData) {
         let contentmessage = m.content.split('\n').join(' ')
+
+        if(m.content.match("(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+?(?=\s)")) {
+            console.log("Обнаружено сообщение с дискорд-ссылкой..")
+
+            if(msgFilter == "links") return;
+        }
+
+
         if(m.content && m.content != `<@${client.user.id}>`) write(contentmessage, config.ourFile, m.guildID);
         if (config.imgSaveAndUse && imgdir.length < config.limitimg) {
             for (let attachment of m.attachments) {
@@ -94,10 +103,10 @@ if(config.ourFile === true) {
                 });
                     console.log(`Скачан файл: ${attachment.filename}`);
                 };
-            };
+                }
+            }
         };
     };
-};
 
     if(!m.mentions.includes(client.user)) {
         if(!config.randomMessage) return;
