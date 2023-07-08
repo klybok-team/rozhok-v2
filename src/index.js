@@ -9,7 +9,7 @@ let config = require('../config.js');
 
 if (!config.token) return console.log('Отсутствует токен клиента для его запуска..');
 
-const { Client, Collection, GatewayIntentBits, PresenceUpdateStatus, ActivityType } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, PresenceUpdateStatus, ActivityType, DMChannel } = require('discord.js');
 
 const client = new Client({
     /*
@@ -19,7 +19,7 @@ const client = new Client({
         users: false,
         repliedUser: true,
     },*/
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
 });
 
 client.cmd = new Collection();
@@ -59,13 +59,14 @@ client.on("messageCreate", async (m) =>
         return;
     };
 
-    
-    if (m.channel.isDMBased() === true) return;
+    if (m.channel == DMChannel) return;
 
     let data;
 
-    if (config.OurFile === false) {
-        if (!fs.existsSync(`../data/${m.guildID}_data.txt`)) {
+    if (config.OurFile === false)
+    {
+        if (!fs.existsSync(`../data/${m.guildID}_data.txt`))
+        {
             console.log('Обнаружена новая гильдия, создаю файл с текстом для неё..');
 
             fs.writeFileSync(`../data/${m.guildID}_data.txt`, 'привет');
@@ -82,24 +83,26 @@ client.on("messageCreate", async (m) =>
     let lines = data.split(/\r?\n/);
     let imgdir = fs.readdirSync('../img');
 
-    let trueOrNot;
+    let trueOrNot = false;
     for (let idChannel of config.idChanneltoSaveAndWrite) {
         if (m.channel.id === idChannel) trueOrNot = true;
     };
     if (!trueOrNot) return;
 
-    if (m.content.length < config.MaxLenghtToWrite && config.SaveAnyData) {
-        let contentmessage = m.content.split('\n').join(' ')
+    if (m.content.length < config.MaxLenghtToWrite && config.SaveAnyData)
+    {
+        let contentmessage = m.content.split('\n').join(' ');
 
-        if (m.content.match("(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+?(?=\s)")) {
+        if (m.content.match("(https?://)?(www.)?(discord.(gg|io|me|li)|discordapp.com/invite)/[^\s/]+?(?=\s)"))
+        {
             console.log("Обнаружено сообщение с дискорд-ссылкой..")
 
             if (config.MsgFilter == "links") return;
         }
 
+        if (m.content != null && m.content != `<@${client.user.id}>`) write(contentmessage, config.OurFile, m.guild.id);
 
-        if (m.content != null && m.content != `<@${client.user.id}>`) write(contentmessage, config.ourFile, m.guildID);
-        if (config.imgSaveAndUse && imgdir.length < config.Limitimg) {
+        if (config.ImgSaveAndUse && imgdir.length < config.Limitimg) {
             for (let attachment of m.attachments) {
                 if (attachment.filename.endsWith('.jpg') || attachment.filename.endsWith('.jpeg') || attachment.filename.endsWith('.png')) {
                     let saveThisBoolean = false;
@@ -115,12 +118,7 @@ client.on("messageCreate", async (m) =>
         };
     };
 
-    if (!m.mentions.has(client.user)) {
-        if (!config.randomMessage) return;
-        if (random(0, 11) < config.messageChance) {
-            return;
-        };
-    };
+    if (!m.mentions.has(client.user)) if (!config.RandomMessage && random(0, 11) < config.MessageChance) return;
 
     if (config.ImgSaveAndUse) {
         if (random(0, 11) < 4) {
@@ -163,7 +161,7 @@ client.once("ready", () => {
         return;
     };
     client.user.setActivity(config.ClientTextStatus, { type: config.TypeOfStatus, url: config.TwitchURL, name: config.ClientTextStatus })
-    return client.user.setStatus(config.ClientOnlineStatus); //, { name: config.bottextStatus, type: config.typeofStatus });
+    return client.user.setStatus(config.ClientOnlineStatus);
 });
 
 client.on('error', (e) => {
