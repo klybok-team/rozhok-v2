@@ -8,7 +8,7 @@ module.exports = {
     desc: 'Создать смешную картинку с Жаком Фреско',
 	async execute(client, m, args) {
 
-        if(args.length > 99) return client.createMessage(m.channel.id, `Слишком много текста.\n${args.length} из 99`);
+        if(args.length > 99) return m.channel.send(`Слишком много текста.\n${args.length} из 99`);
 
         const canvas_img = await loadImage(require('fs').readFileSync('../assets/jack_fresco.png'));
 
@@ -26,6 +26,6 @@ module.exports = {
     
         const result = canvas.toBuffer()
 
-        client.createMessage(m.channel.id, {}, [{ file: result, name: 'jack_fresko.png' }]);
+        m.channel.send({ files: [{ attachment: result, name: 'jack_fresko.png' }]});
 	}
 };

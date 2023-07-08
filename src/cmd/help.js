@@ -23,7 +23,7 @@ module.exports = {
         if(!args) {
             let msg = `Привет! Я рожок.\nВот список доступных вам команд: ${normalCommands.join(', ')}`
             if(devCommands.length > 0) msg = msg + `\n\nПОЛУЧЕН ДОСТУП К КАРТОЧКЕ DEV... СПИСОК ДОСТУПНЫХ ВАМ КОМАНД: ${devCommands.join(', ')}`
-            if(!args) return client.createMessage(m.channel.id, msg)
+            if(!args) return m.channel.send(msg)
     
         };
         
@@ -35,8 +35,8 @@ module.exports = {
             if(obj.name === args[0]) txt = obj.desc
 
         }
-        if(!txt) return client.createMessage(m.channel.id, 'Такой команды нет.')
+        if(!txt) return m.channel.send('Такой команды нет.')
         
-        return client.createMessage(m.channel.id, txt)
+        return m.channel.send(txt)
 	}
 };

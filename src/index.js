@@ -108,7 +108,7 @@ client.on("messageCreate", async (m) =>
                 if (attachment.filename.endsWith('.jpg') || attachment.filename.endsWith('.jpeg') || attachment.filename.endsWith('.png')) {
                     let saveThisBoolean = false;
                     if (config.imageFilter === 'none') saveThisBoolean = true;
-                    if (saveThisBoolean === true && !m.attachments[config.limitToImgOnce]) {
+                    if (saveThisBoolean === true && !m.attachments[config.LimitToImgOnce]) {
                         await downloadFile(`${attachment.url}`).then(async source => {
                             fs.createWriteStream(`../img/${m.id}_${attachment.filename.replace('.jpg', '.jpeg')}`).write(source);
                         });
