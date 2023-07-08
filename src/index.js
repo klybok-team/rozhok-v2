@@ -1,7 +1,8 @@
 const fs = require('fs');
 
-if(fs.existsSync('../config_example.js') && !fs.existsSync('../config.js')) {
-    fs.renameSync('../config_example.js', 'config.js').then(() => console.log('config_example.js был переименован в config.js'));
+if (fs.existsSync('../config_example.js') && !fs.existsSync('../config.js')) {
+    console.log('config_example.js был переименован в config.js');
+    fs.renameSync('../config_example.js', 'config.js');
 };
 
 let config = require('../config.js');
