@@ -1,11 +1,11 @@
-const config = require('../../config.js')
 const fs = require('fs')
 module.exports = {
 	name: 'imgDir',
 	aliases: ['img'],
     desc: '[DEV-команда] предназначена для управления категорией /img',
     devAccess: true,
-	async execute(client, m, args) {
+	async execute(client, m, args)
+    {
         if(!args) {
             const imgList = fs.readdirSync('../img').join('\n')
             

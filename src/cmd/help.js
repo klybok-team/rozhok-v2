@@ -1,6 +1,3 @@
-const downloadFile = require('../functions/downloadFile.js')
-const demotivatorImage = require('../functions/demotivatorImage.js');
-
 module.exports = {
 	name: 'help',
 	aliases: ['h'],
