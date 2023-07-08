@@ -40,7 +40,7 @@ client.on("messageCreate", async (m) =>
     if (m.content.startsWith(config.CommandsPrefix) && config.CommandsEnable === true)
     {
 
-        const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
+        const args = m.content.slice(config.CommandsPrefix.length).trim().split(/ +/);
         const nameOfCommand = args.shift();
 
         const command = client.cmd.get(nameOfCommand) || client.cmd.find(cmd => cmd.aliases && cmd.aliases.includes(nameOfCommand));
