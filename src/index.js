@@ -2,14 +2,14 @@ const fs = require('fs');
 
 if (fs.existsSync('../config_example.js') && !fs.existsSync('../config.js')) {
     console.log('config_example.js был переименован в config.js');
-    fs.renameSync('../config_example.js', 'config.js');
+    fs.renameSync('../config_example.js', '../config.js');
 };
 
 let config = require('../config.js');
 
 if(!config.token) return console.log('kto token bota ykral?');
 
-const { Client, Collection } = require('eris');
+const { Client, Collection } = require('discord.js');
 
 const client = new Client(config.token, {
     allowedMentions: {
