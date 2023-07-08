@@ -19,7 +19,7 @@ const client = new Client({
         users: false,
         repliedUser: true,
     },*/
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildPresences]
 });
 
 client.cmd = new Collection();
@@ -37,7 +37,8 @@ client.on("messageCreate", async (m) =>
 {
     if (m.author.bot) return;
 
-    if (m.content.startsWith(config.commandsPrefix) && config.commandsEnable === true) {
+    if (m.content.startsWith(config.CommandsPrefix) && config.CommandsEnable === true)
+    {
 
         const args = m.content.slice(config.commandsPrefix.length).trim().split(/ +/);
         const nameOfCommand = args.shift();
@@ -47,7 +48,7 @@ client.on("messageCreate", async (m) =>
         if (!command) return;
 
         let areYouDev = false;
-        for (let userID of config.commandsAccess) if (userID === m.author.id) areYouDev = true;
+        for (let userID of config.CommandsAccess) if (userID === m.author.id) areYouDev = true;
 
         try {
             if (command.devAccess && areYouDev === false) return m.channel.send('У вас нет прав на использование этой команды.')
@@ -59,20 +60,20 @@ client.on("messageCreate", async (m) =>
         return;
     };
 
-    if (m.channel == DMChannel) return;
+    if (m.channel == DMChannel || m.guild.id == null) return;
 
     let data;
 
     if (config.OurFile === false)
     {
-        if (!fs.existsSync(`../data/${m.guildID}_data.txt`))
+        if (!fs.existsSync(`../data/${m.guild.id}_data.txt`))
         {
             console.log('Обнаружена новая гильдия, создаю файл с текстом для неё..');
 
-            fs.writeFileSync(`../data/${m.guildID}_data.txt`, 'привет');
+            fs.writeFileSync(`../data/${m.guild.id}_data.txt`, 'привет');
         };
 
-        data = fs.readFileSync(`../data/${m.guildID}_data.txt`, 'UTF-8');
+        data = fs.readFileSync(`../data/${m.guild.id}_data.txt`, 'UTF-8');
     }
 
     if (config.OurFile === true)
@@ -118,7 +119,10 @@ client.on("messageCreate", async (m) =>
         };
     };
 
-    if (!m.mentions.has(client.user)) if (!config.RandomMessage && random(0, 11) < config.MessageChance) return;
+    if (!m.mentions.has(client.user)) {
+        if (!config.RandomMessage) return;
+        if(random(0, 11) < config.MessageChance) return;
+    }
 
     if (config.ImgSaveAndUse) {
         if (random(0, 11) < 4) {
