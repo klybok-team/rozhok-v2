@@ -1,5 +1,5 @@
-Проблема? Обратитесь [суда](https://github.com/swdmeow/rozhok/issues/new).
-
+# Проблема? Обратитесь [суда](https://github.com/swdmeow/rozhok/issues/new).
+### Проект находится в стадии миграции на discord.js и моей лени.. пожалуйста пишите любые баги [суда](https://github.com/swdmeow/rozhok/issues/new)..
 # Установка & запуск:
 ```
 npm i
