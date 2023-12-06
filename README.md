@@ -1,4 +1,4 @@
-c# rewrite
+c# rewrite скоро короче ждите почти все йоу
 ![msedge_zMuV1byk3v](https://github.com/cliv-shape/rozhok/assets/73160076/d8312b8e-d9b0-4c2e-a5ca-aabd84e6da6a)
 
 
