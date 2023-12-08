@@ -1,5 +1,4 @@
-c# rewrite скоро короче ждите почти все йоу
-![msedge_zMuV1byk3v](https://github.com/cliv-shape/rozhok/assets/73160076/d8312b8e-d9b0-4c2e-a5ca-aabd84e6da6a)
+![image](https://github.com/cliv-shape/rozhok/assets/73160076/9b73020e-63e5-4ee5-9bdd-75a1bc093fe1)
 
 
 # Проблема? Обратитесь [суда](https://github.com/swdmeow/rozhok/issues/new).
