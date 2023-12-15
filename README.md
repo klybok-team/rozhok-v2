@@ -6,6 +6,7 @@
 Windows:
 Запустите исполняемый файл (.exe)
 Linux:
+chmod 777 rozhok
 ./rozhok
 ```
 ![image](https://github.com/cliv-shape/rozhok/assets/73160076/9b73020e-63e5-4ee5-9bdd-75a1bc093fe1)
