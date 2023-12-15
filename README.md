@@ -4,9 +4,11 @@
 # Установка & запуск:
 ```
 Windows:
-Запустите исполняемый файл (.exe)
+1. Скачайте архив win-x64 и распакуйте его.
+2. Запустите исполняемый файл (.exe)
 Linux:
-chmod 777 rozhok
-./rozhok
+1. Скачайте архив linux-x64 и распакуйте его.
+2. chmod 777 rozhok
+3. ./rozhok
 ```
 ![image](https://github.com/cliv-shape/rozhok/assets/73160076/9b73020e-63e5-4ee5-9bdd-75a1bc093fe1)
