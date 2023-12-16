@@ -1,5 +1,4 @@
-# Проблема? Обратитесь [суда](https://github.com/swdmeow/rozhok/issues/new).(https://github.com/swdmeow/rozhok/issues/new)..
-(т.к. прошлая библиотека находится в +- инактиве)
+# Проблема? Обратитесь [суда](https://github.com/swdmeow/rozhok/issues/new)
 
 # Установка & запуск:
 ```
