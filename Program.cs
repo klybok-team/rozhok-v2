@@ -4,7 +4,7 @@ using Rozhok.Features.Configs;
 public class Program
 {
     private static Bot? _bot;
-    public static Version Version { get; set; } = new(2, 0, 0);
+    public static Version Version { get; set; } = new(2, 1, 0);
     public static Task Main(string[] args)
     {
         Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
