@@ -30,7 +30,7 @@ public class ConfigsLoader
         {
             Console.WriteLine("Попался! Читаем активный конфиг..");
 
-            var deserializedConfig = Deserializer.Deserialize<Config>(File.ReadAllText(ConfigPath));
+            Config deserializedConfig = Deserializer.Deserialize<Config>(File.ReadAllText(ConfigPath));
 
             File.WriteAllText(ConfigPath, Serializer.Serialize(deserializedConfig).ToString());
 
@@ -45,10 +45,10 @@ public class ConfigsLoader
             Console.WriteLine("Привет! Создаю для вас конфиг, пожалуйста, укажите ваш токен бота. (вставить в консоль - правая кнопка мыши)");
 
             string ptoken = Console.ReadLine()!;
-            
+
             if (ptoken != string.Empty) DefaultConfig.Token = ptoken!;
 
-            var serializedConfig = Serializer.Serialize(DefaultConfig);
+            string serializedConfig = Serializer.Serialize(DefaultConfig);
 
             File.WriteAllText(ConfigPath, serializedConfig.ToString());
 

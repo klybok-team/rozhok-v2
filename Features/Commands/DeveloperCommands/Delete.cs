@@ -1,12 +1,6 @@
 ﻿using Discord.WebSocket;
 using Rozhok.API;
 using Rozhok.Features.Configs;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rozhok.Features.Commands;
 
@@ -14,10 +8,10 @@ public class Delete : Command
 {
     public override string Name => "delete";
     public override string Description => "Удалить изображения и/или текст в указанном сообщении.";
-    public override bool IsDeveloperCommand => true; 
+    public override bool IsDeveloperCommand => true;
     public override async void Execute(SocketMessage message, string[] args, bool IsDeveloper)
     {
-        if(args.Count() < 1)
+        if (args.Count() < 1)
         {
             await message.Channel.SendMessageAsync("Укажите тип того, чего именно вы хотите удалить в сообщении из базы-данных:\nimages - изображения\ntext - текст\nall или любой другой аргумент - все");
             return;
@@ -25,13 +19,13 @@ public class Delete : Command
 
         Type type = Type.None;
         if (args[0] == "image" || args[0] == "img" || args[0] == "images") type = Type.Images;
-        else if(args[0] == "text" || args[0] == "txt" || args[0] == "texts") type = Type.Text;
-        
+        else if (args[0] == "text" || args[0] == "txt" || args[0] == "texts") type = Type.Text;
+
         if (message.Reference != null)
         {
-            var replymsg = await message.Channel.GetMessageAsync(message.Reference.MessageId.Value);
+            Discord.IMessage replymsg = await message.Channel.GetMessageAsync(message.Reference.MessageId.Value);
 
-            if(replymsg.Author.Id != Bot.Client?.CurrentUser.Id)
+            if (replymsg.Author.Id != Bot.Client?.CurrentUser.Id)
             {
                 await message.Channel.SendMessageAsync("Пожалуйста, ответьте на **мое** сообщение, которое вы хотите удалить из базы-данных");
                 return;
@@ -40,7 +34,7 @@ public class Delete : Command
             if (replymsg.Attachments.Count > 0 && (type == Type.Images || type == Type.None))
             {
                 int count = 0;
-                foreach (var file in Directory.GetFiles(Path.Combine(ConfigsLoader.GetPath("Images"))))
+                foreach (string file in Directory.GetFiles(Path.Combine(ConfigsLoader.GetPath("Images"))))
                 {
                     if (file.EndsWith(replymsg.Attachments.FirstOrDefault()!.Filename))
                     {
@@ -51,7 +45,7 @@ public class Delete : Command
                 await message.Channel.SendMessageAsync($"Удалено {count} изображения/й по вашему запросу");
             }
 
-            if(replymsg.Content != null && (type == Type.Text || type == Type.None))
+            if (replymsg.Content != null && (type == Type.Text || type == Type.None))
             {
                 string path = "";
                 if (ConfigsLoader.Config.SaveDataSettings.OurFile)
@@ -66,7 +60,7 @@ public class Delete : Command
                 int count = 0;
                 foreach (string line in File.ReadAllText(path).Split('\n'))
                 {
-                    if(line.Contains(replymsg.Content))
+                    if (line.Contains(replymsg.Content))
                     {
                         line.Replace(replymsg.Content, "[ОТРЕДАКТИРОВАНО]");
                         count++;

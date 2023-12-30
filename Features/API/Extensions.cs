@@ -1,15 +1,6 @@
 ﻿using Rozhok.Features.Configs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Rozhok.Features.Configs.Classes;
-using System.Text.RegularExpressions;
 using Discord.WebSocket;
-using System.IO;
 using System.Net;
-using Discord;
 
 namespace Rozhok.API;
 
@@ -21,22 +12,22 @@ public static class Extensions
 
         if (Directory.GetFiles(ConfigsLoader.ImageDirectory).Count() >= ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder) return;
 
-        #pragma warning disable
+#pragma warning disable
         using (WebClient client = new WebClient())
         {
             client.DownloadFile(new Uri(url), Path.Combine(ConfigsLoader.ImageDirectory, $"{data.Id}_{filename}"));
         }
-        #pragma warning enable
+#pragma warning enable
 
         Console.WriteLine($"Скачано изображение: {data.Id}_{filename}");
     }
     public static void RawDownloadAndSaveFile(string url, string path)
     {
-        #pragma warning disable
+#pragma warning disable
         using (WebClient client = new WebClient())
         {
             client.DownloadFile(new Uri(url), path);
         }
-        #pragma warning enable
+#pragma warning enable
     }
 }

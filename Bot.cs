@@ -3,7 +3,6 @@ using Discord.WebSocket;
 using Rozhok.API;
 using Rozhok.Features.Commands;
 using Rozhok.Features.Configs;
-using System;
 using System.Text.RegularExpressions;
 
 namespace Rozhok;
@@ -55,10 +54,10 @@ public class Bot
     {
         if (message.Author.IsBot || message.Channel.GetChannelType() == ChannelType.DM) return Task.CompletedTask;
 
-        if(message.Content.StartsWith(ConfigsLoader.Config.CommandsSettings.Prefix))
+        if (message.Content.StartsWith(ConfigsLoader.Config.CommandsSettings.Prefix))
         {
-            var args = Regex.Replace(message.Content, @"^roz\.", "", RegexOptions.None).Split(" ");
-            var nameOfCommand = args.FirstOrDefault();
+            string[] args = Regex.Replace(message.Content, @"^roz\.", "", RegexOptions.None).Split(" ");
+            string? nameOfCommand = args.FirstOrDefault();
 
             // Убирает 1 аргумент
             args = args[1..];

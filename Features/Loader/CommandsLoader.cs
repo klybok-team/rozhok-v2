@@ -3,17 +3,14 @@
 using Discord.WebSocket;
 using Rozhok.Features.Configs;
 using System;
-using System.IO;
-using System.Reactive;
 using System.Reflection;
-using YamlDotNet.Serialization;
 
 public class CommandsLoader
 {
     public static List<Command> Commands { get; } = new();
     public static void RegisterCommands()
     {
-        foreach(var type in Assembly.GetExecutingAssembly().GetTypes())
+        foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
         {
             if (type.IsInterface || type.IsAbstract) continue;
 
@@ -28,7 +25,7 @@ public class CommandsLoader
 
     public static void ExecuteCommand(SocketMessage msg, string commandName, string[] args, bool IsDeveloper = false)
     {
-        var Command = Commands.FirstOrDefault(x =>
+        Command? Command = Commands.FirstOrDefault(x =>
         x.Name.ToLower() == commandName.ToLower()
         || x.Aliases.Any(x => x.ToLower() == commandName.ToLower()));
 

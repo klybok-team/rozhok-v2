@@ -1,7 +1,5 @@
 ﻿using Discord;
 using Rozhok.Features.Configs;
-using System.Net;
-using System;
 using Image = System.Drawing.Image;
 using System.Drawing;
 
@@ -17,14 +15,14 @@ public static class DateList
     {
         Console.WriteLine("Начинаем загрузку шаблона для демотиватора..");
 
-        var path = Path.Combine(ConfigsLoader.GetPath("Assets"), "demotivator.png");
+        string path = Path.Combine(ConfigsLoader.GetPath("Assets"), "demotivator.png");
 
-        if(!File.Exists(path))
+        if (!File.Exists(path))
             Extensions.RawDownloadAndSaveFile("https://cdn.discordapp.com/attachments/934101013458194533/1185222279345488013/demotivator.png",
                 path);
-        
 
-        var img = Image.FromFile(path);
+
+        Image img = Image.FromFile(path);
         new Bitmap(img, img.Width, img.Height);
 
         return new Bitmap(img, img.Width, img.Height);

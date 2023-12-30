@@ -1,6 +1,5 @@
 ﻿namespace Rozhok.Features.Configs;
 
-using System;
 using Classes;
 using YamlDotNet.Serialization;
 

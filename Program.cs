@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Rozhok;
-using YamlDotNet.Serialization;
+﻿using Rozhok;
 using Rozhok.Features.Configs;
 
 public class Program
