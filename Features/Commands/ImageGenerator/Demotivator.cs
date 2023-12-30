@@ -1,59 +1,58 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Rozhok.API;
-using Image = System.Drawing.Image;
 using System.Drawing;
-using ImageFormat = System.Drawing.Imaging.ImageFormat;
 using System.Net;
+using Color = System.Drawing.Color;
+using Image = System.Drawing.Image;
+using ImageFormat = System.Drawing.Imaging.ImageFormat;
 
 namespace Rozhok.Features.Commands;
-
+// Dear thanks to: https://github.com/pashokitsme/demotivatorgenerator
 public class Demotivator : Command
 {
     public override string Name => "demotivator";
+    public override string Description => "Создать смешной демотиватор. Для того что-бы разделять текст используйте \" | \"\nДобавьте 3-ий аргумент для активации супер-пупер секретного режима. Аргумент не будет учитоваться в итоговом варианте.";
     public override string[] Aliases => new string[] { "dem", "d" };
+    private static readonly Font LobsterFont = new Font("Lobster", 20);
+    private static StringFormat StringFormat = new StringFormat()
+    {
+        Alignment = StringAlignment.Center
+    };
     public override async void Execute(SocketMessage msg, string[] args, bool IsDev)
     {
-        await msg.Channel.SendMessageAsync("Команда отключена.");
-        return;
-
-        string subtitle = "";
-        string subtitle2 = "";
+        string subtext = "";
+        string undtext = "";
 
         if (args.Count() < 1)
         {
-            await msg.Channel.SendMessageAsync("Нас 25 тысяч и мы идем разбираться, где блять текст??");
+            await msg.Channel.SendMessageAsync("Аргументы отсутствуют.");
             return;
         }
+
+        string[] splited_args = string.Join(" ", args).Split(" | ");
+
+        if (splited_args == null || splited_args.Count() <= 0)
+        {
+            subtext = string.Join(" ", args);
+        }
         else
         {
-            string[] splited_args = string.Join(" ", args).Split(" | ");
+            subtext = splited_args[0];
 
-            if (splited_args.Count() > 0) subtitle = splited_args[0];
-            else subtitle = string.Join(" ", args);
+            if (splited_args.Count() > 1) undtext = splited_args[1];
         }
 
-        if (args.Count() > 1)
-        {
-            string[] splited_args = string.Join(" ", args).Split(" | ");
+        bool WhiteBackground = false;
+        if (splited_args != null && splited_args.Count() > 2) WhiteBackground = true;
 
-            if (splited_args.Count() > 1) subtitle2 = splited_args[1];
-        }
+        string AttachmentUrl = string.Empty;
 
-        Console.WriteLine(subtitle);
-        Console.WriteLine(subtitle2);
-
-        string AttachmentUrl;
         if (msg.Attachments.Count > 0)
-            AttachmentUrl = msg.Attachments.First().Url;
-        else
         {
-            if (msg.Reference == null)
-            {
-                await msg.Channel.SendMessageAsync("Пожалуйста, ответьте на сообщение или пришлите изображение из которого вы хотите сделать демотиватор.");
-                return;
-            }
-
+            AttachmentUrl = msg.Attachments.First().Url;
+        }
+        else if (msg.Reference != null)
+        {
             IMessage replymsg = await msg.Channel.GetMessageAsync(msg.Reference.MessageId.Value);
 
             if (replymsg.Attachments.Count < 1)
@@ -63,6 +62,12 @@ public class Demotivator : Command
             }
 
             AttachmentUrl = replymsg.Attachments.First().Url;
+        }
+
+        if (AttachmentUrl == string.Empty)
+        {
+            await msg.Channel.SendMessageAsync("Пожалуйста, ответьте на сообщение или пришлите изображение из которого вы хотите сделать демотиватор.");
+            return;
         }
 
         Image img;
@@ -83,38 +88,43 @@ public class Demotivator : Command
             }
         }
 
-        Bitmap bmp = new Bitmap(DateList.DemotivatorStatic,
-            DateList.DemotivatorStatic.Width,
-            DateList.DemotivatorStatic.Height);
+        Bitmap bmp = new Bitmap(400, 400);
 
         using (Graphics g = Graphics.FromImage(bmp))
         {
-            g.DrawImage(img, new Rectangle(33, 33, 446, 390));
+            if (!WhiteBackground) g.Clear(Color.Black);
 
-            int standartHeight = 450;
-            if (subtitle2 != string.Empty) standartHeight -= 20;
+            Point position = Offset(CenterPoint(), new Point(0, -50));
 
-            Font lobsterFont = new Font("Lobster", 20);
+            g.DrawImage(img, Rect(325, 250, position));
 
-            subtitle = CenteredString(subtitle, img.Width);
-            subtitle2 = CenteredString(subtitle2, img.Width);
+            Pen linePen = new Pen(Brushes.White) { Width = 1.5f };
 
-            SizeF size = g.MeasureString(subtitle, lobsterFont);
-            SizeF size2 = g.MeasureString(subtitle2, lobsterFont);
+            g.DrawLine(linePen,
+                       Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
+                       Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)));
 
-            g.DrawString(subtitle,
-                lobsterFont,
-                Brushes.White,
-                new PointF((img.Width / 2) + size.Width, standartHeight));
+            g.DrawLine(linePen,
+                       Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
+                       Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5)));
 
-            if (subtitle2 != string.Empty)
-            {
-                g.DrawString(subtitle2,
-                    lobsterFont,
-                    Brushes.White,
-                    // это гениально
-                    new PointF((img.Width / 2) + size2.Width, standartHeight));
-            }
+            g.DrawLine(linePen,
+                       Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)),
+                       Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5)));
+
+            g.DrawLine(linePen,
+                       Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5)),
+                       Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5)));
+
+            RectangleF textBox = RectF(325 + 325 / 2,
+                                       250 / 2,
+                                       Offset(position, new Point(0, 250 / 2 + 250 / 3)));
+
+            g.DrawString($"{subtext}\n{undtext}",
+                         LobsterFont,
+                         Brushes.White,
+                         textBox,
+                         StringFormat);
         }
         img = bmp;
 
@@ -126,8 +136,28 @@ public class Demotivator : Command
 
         img.Dispose();
     }
-    public static string CenteredString(string s, int width)
+    static Point CenterPoint(int? height = null, int? width = null)
     {
-        return s.PadLeft((width + s.Length) / 4).PadRight(width);
+        height = height == null ? 400 : height;
+        width = width == null ? 400 : width;
+
+        return new Point((int)(height / 2), (int)(width / 2));
+    }
+
+    static Rectangle Rect(int width, int height, Point position)
+    {
+        return new Rectangle(position.X - width / 2, position.Y - height / 2, width, height);
+    }
+    static RectangleF RectF(float width, float height, Point position)
+    {
+        return new RectangleF(position.X - width / 2, position.Y - height / 2, width, height);
+    }
+
+    static Point Offset(Point point, Point offset)
+    {
+        point.X += offset.X;
+        point.Y += offset.Y;
+
+        return point;
     }
 }

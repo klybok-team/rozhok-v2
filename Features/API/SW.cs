@@ -3,8 +3,6 @@ using Rozhok.Features.Configs.Classes;
 using System.Text.RegularExpressions;
 using Discord.WebSocket;
 using Discord;
-using Microsoft.VisualBasic;
-using System.Drawing.Drawing2D;
 
 namespace Rozhok.API;
 

@@ -115,7 +115,7 @@ public class Bot
             >= ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder)
             type = ImageType.Full;
 
-        if(type == ImageType.Full)
+        if (type == ImageType.Full)
         {
             Console.ForegroundColor = ConsoleColor.Red;
 

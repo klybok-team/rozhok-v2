@@ -7,19 +7,14 @@ public class Program
     public static Version Version { get; set; } = new(2, 0, 0);
     public static Task Main(string[] args)
     {
+        Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
+
         Console.Title = $"rozhok v{Version}";
         Console.ForegroundColor = ConsoleColor.White;
 
         Console.WriteLine("Создаем тело бота..");
 
         _bot = new Bot(ConfigsLoader.Config.Token);
-
-        AppDomain.CurrentDomain.ProcessExit += (_, _) =>
-        {
-            Rozhok.API.SaveAndWrite.WriteData();
-
-            _bot.Destroy();
-        };
 
         Console.WriteLine("Отлично! Начинаем процесс включения бота..");
 
@@ -55,5 +50,13 @@ public class Program
             }
         }
     }
+    static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+    {
+        Console.WriteLine("Попался, найден процесс выхода из программы. Начинаю сохранение.");
 
+        Rozhok.API.SaveAndWrite.WriteData();
+        _bot.Destroy();
+
+        Console.WriteLine("Успешно!");
+    }
 }
