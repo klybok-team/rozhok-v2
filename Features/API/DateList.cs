@@ -21,9 +21,7 @@ public static class DateList
             Extensions.RawDownloadAndSaveFile("https://cdn.discordapp.com/attachments/934101013458194533/1185222279345488013/demotivator.png",
                 path);
 
-
         Image img = Image.FromFile(path);
-        new Bitmap(img, img.Width, img.Height);
 
         return new Bitmap(img, img.Width, img.Height);
     }

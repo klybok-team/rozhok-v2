@@ -77,7 +77,7 @@ public class Bot
 
         if (message.MentionedUsers.Any(x => x.Id == Client?.CurrentUser.Id)
             || ConfigsLoader.Config.UseDataSettings.RandomMessage
-            && ConfigsLoader.Config.UseDataSettings.MessageChance <= SaveAndWrite.Random.Next(0, 100))
+            && ConfigsLoader.Config.UseDataSettings.MessageChance <= Extensions.Random.Next(0, 100))
         {
             SaveAndWrite.GetRandomMessage(message);
         }
@@ -89,13 +89,7 @@ public class Bot
     {
         Console.WriteLine($"Готов,\nИмя: {Client?.CurrentUser.Username}#{Client?.CurrentUser.Discriminator}\n\nДОП. ИНФ.\nАйди клиента: {Client?.CurrentUser.Id}\nКоличество серверов: {Client?.Guilds.Count}");
 
-        Console.Title = $"rozhok v{Program.Version} - {RandomPhrases[SaveAndWrite.Random.Next(0, RandomPhrases.Count)]}";
-
-        Console.ForegroundColor = ConsoleColor.Cyan;
-
-        Console.WriteLine(Directory.GetFiles(ConfigsLoader.ImageDirectory).Count() >= ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder
-            ? $"Количество изображений в папке для их хранения превышает лимит. ({Directory.GetFiles(ConfigsLoader.ImageDirectory).Count()} из {ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder})"
-            : $"{Directory.GetFiles(ConfigsLoader.ImageDirectory).Count()} из {ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder} места свободно для изображений в папке их хранения.");
+        Console.WriteLine(GetCategoryNotification());
 
         Console.ForegroundColor = ConsoleColor.White;
 
@@ -107,17 +101,29 @@ public class Bot
 
         DateList.GetDemotivatorImage();
     }
-    private static List<string> RandomPhrases = new()
+
+    enum ImageType
     {
-        $"до нового года: {Math.Round((new DateTime(DateTime.Now.Year + 1, 1, 1, 0, 0, 0) - DateTime.Now).TotalDays)} дней(я)",
-        $"до 1 июня: {Math.Round((new DateTime(DateTime.Now.Year, 6, 1, 0, 0, 0) - DateTime.Now).TotalDays)} дней(я)",
-        "Я вижу этот свет и за окном, всё вернуть",
-        "паблик закрывается админ принял таблетки от шизофрении",
-        "чиво?? это что змея?",
-        "внима̶̹͂н̴̡̑ие!",
-        "разработчик лох",
-        "мм.. бананчики",
-        "плохие новости друзья я не удаляю паблик",
-        "ваш токен бота был отправлен компании по производству бананов"
-    };
+        Avalible,
+        Full
+    }
+    string GetCategoryNotification()
+    {
+        ImageType type = ImageType.Avalible;
+
+        if (Directory.GetFiles(ConfigsLoader.ImageDirectory).Count()
+            >= ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder)
+            type = ImageType.Full;
+
+        if(type == ImageType.Full)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            return $"Количество изображений в папке для их хранения превышает лимит. ({Directory.GetFiles(ConfigsLoader.ImageDirectory).Count()} из {ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder})";
+        }
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+
+        return $"{Directory.GetFiles(ConfigsLoader.ImageDirectory).Count()} из {ConfigsLoader.Config.SaveDataSettings.LimitImagesInFolder} места свободно для изображений в папке их хранения.";
+    }
 }

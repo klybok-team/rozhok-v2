@@ -3,14 +3,14 @@ using Rozhok.Features.Configs.Classes;
 using System.Text.RegularExpressions;
 using Discord.WebSocket;
 using Discord;
+using Microsoft.VisualBasic;
+using System.Drawing.Drawing2D;
 
 namespace Rozhok.API;
 
 public static class SaveAndWrite
 {
     public static Dictionary<ulong, List<string>> SavedData { get; set; } = new();
-
-    public static Random Random = new Random();
     public static bool TrySaveData(SocketMessage data)
     {
         if (!ConfigsLoader.Config.SaveDataSettings.SaveAnyData) return false;
@@ -22,7 +22,12 @@ public static class SaveAndWrite
             {
                 if (!attachment.Filename.EndsWith(".jpg")
                     && !attachment.Filename.EndsWith(".jpeg")
-                    && !attachment.Filename.EndsWith(".png")) continue;
+                    && !attachment.Filename.EndsWith(".png")
+                    && !attachment.Filename.EndsWith(".gif")
+                    && !attachment.Filename.EndsWith(".mp4")) continue;
+
+                // bytes to MB
+                if (attachment.Size / 1048576 > 15) continue;
 
                 Extensions.DownloadAndSaveFile(attachment.Url, data, attachment.Filename);
             }
@@ -37,7 +42,8 @@ public static class SaveAndWrite
 
         if (data.Content == $"<@{Bot.Client?.CurrentUser.Id}>") return false;
 
-        ulong guildid = (data.Channel as SocketGuildChannel)!.Guild.Id;
+        ulong guildid = data.Channel.GetGuildId();
+
         if (ConfigsLoader.Config.SaveDataSettings.OurFile) guildid = 0;
 
         if (!SavedData.ContainsKey(guildid))
@@ -77,11 +83,8 @@ public static class SaveAndWrite
 
         List<string> list = txt.Split('\n').ToList();
 
-        // На подстраховачку (сигма сигма сигма)
         if (!SavedData.ContainsKey(id))
-        {
             SavedData.Add(id, list);
-        }
         else SavedData[id] = list;
     }
     public static void WriteData()
@@ -110,15 +113,15 @@ public static class SaveAndWrite
 
         Console.WriteLine("Данные сохранены.");
     }
-    public static void GetRandomMessage(SocketMessage data)
+    public static async void GetRandomMessage(SocketMessage data)
     {
-        if (Random.Next(0, 10) < 2 && ConfigsLoader.Config.SaveDataSettings.ImagesSaveAndUse)
+        if (Extensions.Random.Next(0, 10) < 2 && ConfigsLoader.Config.SaveDataSettings.ImagesSaveAndUse)
         {
             string[] files = Directory.GetFiles(ConfigsLoader.ImageDirectory);
 
             if (files.Count() > 0)
             {
-                (data.Channel as ITextChannel)?.SendFileAsync(files[Random.Next(0, files.Length)]);
+                await data.Channel.SendFileAsync(files[Extensions.Random.Next(0, files.Length)]);
 
                 return;
             }
@@ -126,11 +129,11 @@ public static class SaveAndWrite
 
         ulong guildid = (data.Channel as SocketGuildChannel)!.Guild.Id;
 
-        string randommessage1 = SavedData[guildid][Random.Next(0, SavedData[guildid].Count)];
-        string randommessage2 = SavedData[guildid][Random.Next(0, SavedData[guildid].Count)];
+        string rm1 = SavedData[guildid].RandomItem();
+        string rm2 = SavedData[guildid].RandomItem();
 
-        if (Random.Next(0, 10) < 7) (data.Channel as ITextChannel)?.SendMessageAsync(randommessage1);
-        else (data.Channel as ITextChannel)?.SendMessageAsync($"{randommessage1} {randommessage2}");
+        if (Extensions.Random.Next(0, 10) < 7) await data.Channel.SendMessageAsync(rm1);
+        else await data.Channel.SendMessageAsync($"{rm1} {rm2}");
     }
     public static void FilterFile()
     {
