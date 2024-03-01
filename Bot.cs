@@ -49,6 +49,22 @@ public class Bot
 
         Console.WriteLine("Подключаемся к дискорду. Если подключения нет долгое время - токен указан неправильно.");
     }
+    public static async void SaveData()
+    {
+        Console.WriteLine("Запущен цикл для сохранения данных.");
+
+        while(true)
+        {
+            if (SaveAndWrite.SavedData.Count > 0)
+            {
+                Console.WriteLine("Начат процесс сохранения данных.");
+
+                SaveAndWrite.WriteData();
+            }
+
+            await Task.Delay(60000);
+        }
+    }
 
     private Task OnMessageReceived(SocketMessage message)
     {
@@ -59,7 +75,8 @@ public class Bot
             string[] args = Regex.Replace(message.Content, @"^roz\.", "", RegexOptions.None).Split(" ");
             string? nameOfCommand = args.FirstOrDefault();
 
-            // Убирает 1 аргумент
+            // Убирает 1 аргумент (т.е. переопределяет переменную начиная со 2 элемента в списке)
+            // Убирает roz. в начале аргументов
             args = args[1..];
 
             CommandsLoader.ExecuteCommand(
@@ -77,7 +94,7 @@ public class Bot
 
         if (message.MentionedUsers.Any(x => x.Id == Client?.CurrentUser.Id)
             || ConfigsLoader.Config.UseDataSettings.RandomMessage
-            && ConfigsLoader.Config.UseDataSettings.MessageChance <= Extensions.Random.Next(0, 100))
+            && ConfigsLoader.Config.UseDataSettings.MessageChance > Extensions.Random.Next(0, 100))
         {
             SaveAndWrite.GetRandomMessage(message);
         }
@@ -100,6 +117,8 @@ public class Bot
             ConfigsLoader.Config.ClientStatusSettings.TypeOfStatus);
 
         DateList.GetDemotivatorImage();
+
+        SaveData();
     }
 
     enum ImageType

@@ -9,6 +9,7 @@ public class Delete : Command
     public override string Name => "delete";
     public override string Description => "Удалить изображения и/или текст в указанном сообщении.";
     public override bool IsDeveloperCommand => true;
+    public override string[] Aliases => new string[] { "del" };
     public override async void Execute(SocketMessage message, string[] args, bool IsDeveloper)
     {
         if (args.Count() < 1)

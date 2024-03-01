@@ -1,5 +1,6 @@
 ﻿namespace Rozhok.Features.Commands;
 
+using Discord;
 using Discord.WebSocket;
 using Rozhok.Features.Configs;
 using System;
@@ -23,7 +24,7 @@ public class CommandsLoader
         }
     }
 
-    public static void ExecuteCommand(SocketMessage msg, string commandName, string[] args, bool IsDeveloper = false)
+    public static async void ExecuteCommand(SocketMessage msg, string commandName, string[] args, bool IsDeveloper = false)
     {
         Command? Command = Commands.FirstOrDefault(x =>
         x.Name.ToLower() == commandName.ToLower()
@@ -33,10 +34,16 @@ public class CommandsLoader
 
         if (!IsDeveloper && Command.IsDeveloperCommand)
         {
-            msg.Channel.SendMessageAsync(ConfigsLoader.Config.CommandsSettings.DeniedMessage);
+            await msg.Channel.SendMessageAsync(ConfigsLoader.Config.CommandsSettings.DeniedMessage);
             return;
         }
 
-        Command.Execute(msg, args, IsDeveloper);
+        try
+        {
+            Command.Execute(msg, args, IsDeveloper);
+        } catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
     }
 }

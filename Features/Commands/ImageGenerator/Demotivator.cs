@@ -1,11 +1,17 @@
 ﻿using Discord;
+using Discord.Audio.Streams;
 using Discord.WebSocket;
-using System.Drawing;
+using Rozhok.API;
+using SixLabors.Fonts;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Drawing.Processing;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System.Net;
-using Color = System.Drawing.Color;
-using Image = System.Drawing.Image;
-using ImageFormat = System.Drawing.Imaging.ImageFormat;
-
+using static System.Net.Mime.MediaTypeNames;
+using Color = SixLabors.ImageSharp.Color;
+using Image = SixLabors.ImageSharp.Image;
 namespace Rozhok.Features.Commands;
 // Dear thanks to: https://github.com/pashokitsme/demotivatorgenerator
 public class Demotivator : Command
@@ -13,13 +19,11 @@ public class Demotivator : Command
     public override string Name => "demotivator";
     public override string Description => "Создать смешной демотиватор. Для того что-бы разделять текст используйте \" | \"\nДобавьте 3-ий аргумент для активации супер-пупер секретного режима. Аргумент не будет учитоваться в итоговом варианте.";
     public override string[] Aliases => new string[] { "dem", "d" };
-    private static readonly Font LobsterFont = new Font("Lobster", 20);
-    private static StringFormat StringFormat = new StringFormat()
-    {
-        Alignment = StringAlignment.Center
-    };
     public override async void Execute(SocketMessage msg, string[] args, bool IsDev)
     {
+        await msg.Channel.SendMessageAsync("иди нахуй");
+        return;
+
         string subtext = "";
         string undtext = "";
 
@@ -78,65 +82,88 @@ public class Demotivator : Command
             {
                 try
                 {
-                    img = Image.FromStream(stream);
+                    img = Image.Load(stream);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
+
                     await msg.Channel.SendMessageAsync("Формат изображения не поддерживается или произошла ошибка при обработке изображения.");
                     return;
                 }
             }
         }
 
-        Bitmap bmp = new Bitmap(400, 400);
+        Image<Rgba32> DemotivatorImage = new(400, 400);
 
-        using (Graphics g = Graphics.FromImage(bmp))
+        DemotivatorImage.Mutate(x =>
         {
-            if (!WhiteBackground) g.Clear(Color.Black);
+            if (!WhiteBackground) x.Clear(Color.Black);
 
             Point position = Offset(CenterPoint(), new Point(0, -50));
 
-            g.DrawImage(img, Rect(325, 250, position));
+            //x.DrawImage(img, foregroundRectangle: Rect(325, 250, position), 1);
 
-            Pen linePen = new Pen(Brushes.White) { Width = 1.5f };
 
-            g.DrawLine(linePen,
-                       Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
-                       Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)));
+            x.DrawLine(color: Color.White, thickness: 1.5f,
+                points: new PointF[] {
+                Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
+                Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)),
+                });
 
-            g.DrawLine(linePen,
-                       Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
-                       Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5)));
+            x.DrawLine(color: Color.White, thickness: 1.5f,
+                points: new PointF[] {
+                Offset(position, new Point(-325 / 2 - 5, -250 / 2 - 5)),
+                Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5))
+                });
 
-            g.DrawLine(linePen,
-                       Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)),
-                       Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5)));
+            x.DrawLine(color: Color.White, thickness: 1.5f,
+                points: new PointF[] {
+                Offset(position, new Point(325 / 2 + 5, -250 / 2 - 5)),
+                Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5))
+                });
 
-            g.DrawLine(linePen,
-                       Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5)),
-                       Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5)));
+            x.DrawLine(color: Color.White, thickness: 1.5f,
+                points: new PointF[] {
+                Offset(position, new Point(-325 / 2 - 5, 250 / 2 + 5)),
+                Offset(position, new Point(325 / 2 + 5, 250 / 2 + 5))
+                });
 
-            RectangleF textBox = RectF(325 + 325 / 2,
-                                       250 / 2,
+            PointF textBox = OffsetF(new Point(325 + 325 / 2,
+                                       250 / 2),
                                        Offset(position, new Point(0, 250 / 2 + 250 / 3)));
 
-            g.DrawString($"{subtext}\n{undtext}",
-                         LobsterFont,
-                         Brushes.White,
-                         textBox,
-                         StringFormat);
-        }
-        img = bmp;
+            int size;
+            float padding;
+
+            int txtLenght = string.Join(" ", args).Length;
+            if (txtLenght < 25)
+            {
+                size = 50;
+                padding = (float)(size / 3.8 * txtLenght);
+            }
+            else
+            {
+                size = 30;
+                padding = (float)(size / 7.9 * txtLenght);
+            }
+
+            x.DrawText($"{subtext}\n{undtext}",
+                       DateList.LobsterFont,
+                       Color.White,
+                       new PointF((float)(img.Width / 2 - padding), img.Height / 2 + 130));
+        });
+        img = DemotivatorImage;
 
         MemoryStream ms = new MemoryStream();
-        img.Save(ms, ImageFormat.Png);
+        img.Save(ms, new PngEncoder());
         ms.Position = 0;
 
         await msg.Channel.SendFileAsync(ms, "demotivator.png", "Ваше изображение:");
 
         img.Dispose();
     }
-    static Point CenterPoint(int? height = null, int? width = null)
+    static SixLabors.ImageSharp.Point CenterPoint(int? height = null, int? width = null)
     {
         height = height == null ? 400 : height;
         width = width == null ? 400 : width;
@@ -154,6 +181,13 @@ public class Demotivator : Command
     }
 
     static Point Offset(Point point, Point offset)
+    {
+        point.X += offset.X;
+        point.Y += offset.Y;
+
+        return point;
+    }
+    static PointF OffsetF(Point point, Point offset)
     {
         point.X += offset.X;
         point.Y += offset.Y;

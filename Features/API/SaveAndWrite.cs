@@ -61,6 +61,8 @@ public static class SaveAndWrite
         if (!File.Exists(ConfigsLoader.GetPath(Path.Combine("Data", "data.txt"))))
             File.WriteAllText(ConfigsLoader.GetPath(Path.Combine("Data", "data.txt")), "привет");
 
+        FilterFiles();
+
         string txt = "";
 
         if (ConfigsLoader.Config.SaveDataSettings.OurFile || id == 0)
@@ -99,15 +101,18 @@ public static class SaveAndWrite
 
             File.WriteAllText(path, data);
 
-            return;
         }
-
-        foreach (KeyValuePair<ulong, List<string>> data in SavedData)
+        else
         {
-            path = ConfigsLoader.GetPath(Path.Combine("Data", $"{data.Key}_data.txt"));
+            foreach (KeyValuePair<ulong, List<string>> data in SavedData)
+            {
+                path = ConfigsLoader.GetPath(Path.Combine("Data", $"{data.Key}_data.txt"));
 
-            File.WriteAllText(path, string.Join('\n', data.Value));
+                File.WriteAllText(path, string.Join('\n', data.Value));
+            }
         }
+
+        SavedData.Clear();
 
         Console.WriteLine("Данные сохранены.");
     }
@@ -127,13 +132,31 @@ public static class SaveAndWrite
 
         ulong guildid = (data.Channel as SocketGuildChannel)!.Guild.Id;
 
+        if (!SavedData.ContainsKey(guildid))
+        {
+            LoadData(guildid);
+        }
+
         string rm1 = SavedData[guildid].RandomItem();
         string rm2 = SavedData[guildid].RandomItem();
+
+        if (rm1 == string.Empty || rm2 == string.Empty) FilterFiles();
+
+        int tries = 0;
+        while(rm1 == string.Empty || rm2 == string.Empty)
+        {
+            if (rm1 == string.Empty) SavedData[guildid].RandomItem();
+            if (rm2 == string.Empty) SavedData[guildid].RandomItem();
+
+            if (tries > 25) return;
+
+            tries++;
+        }
 
         if (Extensions.Random.Next(0, 10) < 7) await data.Channel.SendMessageAsync(rm1);
         else await data.Channel.SendMessageAsync($"{rm1} {rm2}");
     }
-    public static void FilterFile()
+    public static void FilterFiles()
     {
         foreach (string file in Directory.GetFiles(ConfigsLoader.GetPath(Path.Combine("Data"))))
         {

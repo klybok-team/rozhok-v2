@@ -7,6 +7,8 @@ public class Program
     public static Version Version { get; set; } = new(2, 1, 0);
     public static Task Main(string[] args)
     {
+        Console.Clear();
+
         Console.CancelKeyPress += new ConsoleCancelEventHandler(Console_CancelKeyPress);
 
         Console.Title = $"rozhok v{Version}";
@@ -45,7 +47,7 @@ public class Program
                     Rozhok.API.SaveAndWrite.WriteData();
                     break;
                 case "filter":
-                    Rozhok.API.SaveAndWrite.FilterFile();
+                    Rozhok.API.SaveAndWrite.FilterFiles();
                     break;
             }
         }
