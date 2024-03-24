@@ -16,8 +16,11 @@ public static class SaveAndWrite
         if (ConfigsLoader.Config.SaveDataSettings.ImagesSaveAndUse
         && data.Attachments.Count < ConfigsLoader.Config.SaveDataSettings.LimitImagesToOnce)
         {
+            bool y = false;
             foreach (Attachment? attachment in data.Attachments)
             {
+                y = true;
+
                 if (!attachment.Filename.EndsWith(".jpg")
                     && !attachment.Filename.EndsWith(".jpeg")
                     && !attachment.Filename.EndsWith(".png")
@@ -28,6 +31,8 @@ public static class SaveAndWrite
                 if (attachment.Size / 1048576 > 15) continue;
 
                 Extensions.DownloadAndSaveFile(attachment.Url, data, attachment.Filename);
+
+                if (y) data.AddReactionAsync(DateList.Checkmark);
             }
         }
 
@@ -112,8 +117,6 @@ public static class SaveAndWrite
             }
         }
 
-        SavedData.Clear();
-
         Console.WriteLine("Данные сохранены.");
     }
     public static async void GetRandomMessage(SocketMessage data)
@@ -124,7 +127,21 @@ public static class SaveAndWrite
 
             if (files.Count() > 0)
             {
-                await data.Channel.SendFileAsync(files[Extensions.Random.Next(0, files.Length)]);
+                if (data.Reference != null)
+                {
+                    Console.WriteLine(data.Reference.MessageId);
+
+                    IMessage msg = await data.Channel.GetMessageAsync(data.Reference.MessageId.Value);
+
+                    if (msg.Author.Id == Bot.Client.CurrentUser.Id)
+                    {
+                        await data.Channel.SendFileAsync(files[Extensions.Random.Next(0, files.Length)], allowedMentions: AllowedMentions.None);
+
+                        return;
+                    };
+                }
+
+                await data.Channel.SendFileAsync(files[Extensions.Random.Next(0, files.Length)], allowedMentions: AllowedMentions.None);
 
                 return;
             }
@@ -143,7 +160,7 @@ public static class SaveAndWrite
         if (rm1 == string.Empty || rm2 == string.Empty) FilterFiles();
 
         int tries = 0;
-        while(rm1 == string.Empty || rm2 == string.Empty)
+        while (rm1 == string.Empty || rm2 == string.Empty)
         {
             if (rm1 == string.Empty) SavedData[guildid].RandomItem();
             if (rm2 == string.Empty) SavedData[guildid].RandomItem();
@@ -153,8 +170,23 @@ public static class SaveAndWrite
             tries++;
         }
 
-        if (Extensions.Random.Next(0, 10) < 7) await data.Channel.SendMessageAsync(rm1);
-        else await data.Channel.SendMessageAsync($"{rm1} {rm2}");
+        if (data.Reference != null)
+        {
+            Console.WriteLine(data.Reference.MessageId);
+
+            IMessage msg = await data.Channel.GetMessageAsync(data.Reference.MessageId.Value);
+
+            if (msg.Author.Id == Bot.Client.CurrentUser.Id)
+            {
+                if (Extensions.Random.Next(0, 10) < 7) await MessageExtensions.ReplyAsync((IUserMessage)data, rm1, allowedMentions: AllowedMentions.None);
+                else await MessageExtensions.ReplyAsync((IUserMessage)data, $"{rm1} {rm2}", allowedMentions: AllowedMentions.None);
+
+                return;
+            };
+        }
+
+        if (Extensions.Random.Next(0, 10) < 7) await data.Channel.SendMessageAsync(rm1, allowedMentions: AllowedMentions.None);
+        else await data.Channel.SendMessageAsync($"{rm1} {rm2}", allowedMentions: AllowedMentions.None);
     }
     public static void FilterFiles()
     {

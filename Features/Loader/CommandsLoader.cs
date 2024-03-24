@@ -1,6 +1,5 @@
 ﻿namespace Rozhok.Features.Commands;
 
-using Discord;
 using Discord.WebSocket;
 using Rozhok.Features.Configs;
 using System;
@@ -41,7 +40,8 @@ public class CommandsLoader
         try
         {
             Command.Execute(msg, args, IsDeveloper);
-        } catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             Console.WriteLine(ex);
         }

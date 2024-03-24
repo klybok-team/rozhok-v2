@@ -1,15 +1,12 @@
 ﻿using Discord;
-using Discord.Audio.Streams;
 using Discord.WebSocket;
 using Rozhok.API;
-using SixLabors.Fonts;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.Net;
-using static System.Net.Mime.MediaTypeNames;
 using Color = SixLabors.ImageSharp.Color;
 using Image = SixLabors.ImageSharp.Image;
 namespace Rozhok.Features.Commands;
@@ -21,9 +18,6 @@ public class Demotivator : Command
     public override string[] Aliases => new string[] { "dem", "d" };
     public override async void Execute(SocketMessage msg, string[] args, bool IsDev)
     {
-        await msg.Channel.SendMessageAsync("иди нахуй");
-        return;
-
         string subtext = "";
         string undtext = "";
 
@@ -102,8 +96,7 @@ public class Demotivator : Command
 
             Point position = Offset(CenterPoint(), new Point(0, -50));
 
-            //x.DrawImage(img, foregroundRectangle: Rect(325, 250, position), 1);
-
+            x.DrawImage(img, foregroundRectangle: Rect(325, 250, position), 1);
 
             x.DrawLine(color: Color.White, thickness: 1.5f,
                 points: new PointF[] {

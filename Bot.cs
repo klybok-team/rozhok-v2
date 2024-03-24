@@ -53,7 +53,7 @@ public class Bot
     {
         Console.WriteLine("Запущен цикл для сохранения данных.");
 
-        while(true)
+        while (true)
         {
             if (SaveAndWrite.SavedData.Count > 0)
             {
@@ -115,8 +115,6 @@ public class Bot
         await Client.SetGameAsync(ConfigsLoader.Config.ClientStatusSettings.ClientTextStatus,
             ConfigsLoader.Config.ClientStatusSettings.TwitchURL,
             ConfigsLoader.Config.ClientStatusSettings.TypeOfStatus);
-
-        DateList.GetDemotivatorImage();
 
         SaveData();
     }

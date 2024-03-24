@@ -16,13 +16,13 @@ public class ShowMessage : Command
         }
 
         IMessage replymsg = await socket_msg.Channel.GetMessageAsync(socket_msg.Reference.MessageId.Value);
-        
-        if(replymsg == null || replymsg.Content == null || replymsg.Content == string.Empty)
+
+        if (replymsg == null || replymsg.Content == null || replymsg.Content == string.Empty)
         {
             await socket_msg.Channel.SendMessageAsync("В указанном сообщении не найден текст.");
             return;
         }
 
-        await socket_msg.Channel.SendMessageAsync($"```{replymsg.Content.Replace(@"`","")}```");
+        await socket_msg.Channel.SendMessageAsync($"```{replymsg.Content.Replace(@"`", @"\`")}```");
     }
 }
